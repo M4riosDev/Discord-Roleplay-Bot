@@ -1,1 +1,1 @@
-# Discord-Roleplay-B0t
+# Discord-Roleplay-Bot
