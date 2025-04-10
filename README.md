@@ -52,7 +52,7 @@ Node.js 16+
 
 ### 1. Clone the project
 
-```git clone https://github.com/yourname/roleplay-bot.git ```
+```git clone https://github.com/M4riosDev/Discord-Roleplay-Bot.git ```
 cd roleplay-bot
 npm install
 
