@@ -37,7 +37,7 @@ A powerful and modular Discord bot built for **roleplay servers**, featuring ful
   - 💥 **Anti-Nuke**: prevents mass kicks/bans/role deletes
 
 - 🛠️ **Moderation Tools**
-  - `/ban`, `/kick`, `/mute`, `/lock`, `/nuke`, `/purge`
+  - `ban`, `kick`, `mute`, `lock`, `nuke`, `purge`
   - Channel & role management
   - Embedded feedback and error control
 
