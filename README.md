@@ -65,4 +65,4 @@ Soon
 
 🤝 Contributing
 We welcome contributions!
-Check out [CONTRIBUTING.md](./CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) before you open a pull request.
+Check out [CONTRIBUTING.md](./CONTRIBUTING.md) before you open a pull request.
