@@ -10,19 +10,16 @@ A powerful and modular Discord bot built for **roleplay servers**, featuring ful
   - Join / Leave logs
   - Message edits & deletions
   - Voice channel activity (join/leave/move)
-  - Role, channel, and nickname changes
+  - Role and channel changes
   - Ban / Unban tracking
 
-- 🎫 **Ticket System** *(Dropdown-based)*
+- 🎫 **Ticket System**
   - Tickets created via Select Menu
   - Auto move to correct category
-  - Auto-close, transcript, and logging
-  - Staff-only support flow
+  - Auto-close, transcript, and logging.
 
 - 🧾 **Support System**
   - Auto category assignment
-  - Staff visibility control
-  - Clean, managed structure
 
 - ⏱️ **Clock-In System**
   - Staff or player activity check-in
@@ -58,7 +55,6 @@ npm install
 
 ### 2. Setup environment variables
 Fill in all required data in ./configs/config.js 
-> NOTE: If you're on replit.com, it is exposed to everyone!(use .env instead)
 
 ### 3. Starting the Project
 Now start the bot by opening a cmd line in that folder and typing: node index.js or npm start 
