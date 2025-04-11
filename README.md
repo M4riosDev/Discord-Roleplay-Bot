@@ -60,7 +60,7 @@ Fill in all required data in ./configs/config.js
 Now start the bot by opening a cmd line in that folder and typing: node index.js or npm start 
 
 
-📸 Screenshots
+### 📸 Screenshots
 ![image](https://github.com/user-attachments/assets/69846cf3-e199-4bc8-9f4b-1cfeb744d911)
 ![image](https://github.com/user-attachments/assets/869a6688-619c-4395-9653-1c81d5e55309)
 ![image](https://github.com/user-attachments/assets/7c32dd1b-e72a-4cf0-b0da-7846e50bacac)
@@ -69,6 +69,6 @@ Now start the bot by opening a cmd line in that folder and typing: node index.js
 
 
 
-🤝 Contributing
+### 🤝 Contributing
 We welcome contributions!
 Check out [CONTRIBUTING.md](./CONTRIBUTING.md) before you open a pull request.
