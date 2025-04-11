@@ -22,22 +22,22 @@ module.exports = {
                     .addOptions([
                         {
                             label: 'Έναρξη υπηρεσίας',
-                            emoji: '<a:on:1327692530300620840>',
+                            emoji: client.config.server.emojis.online,
                             value: 'start',
                         },
                         {
                             label: 'Τέλος υπηρεσίας',
-                            emoji: '<a:off:1327693331098112121>',
+                            emoji: client.config.server.emojis.offline,
                             value: 'stop',
                         },
                         {
                             label: 'Συνολικές Ώρες',
-                            emoji: '<:Question:1323251280189067284>',
+                            emoji: client.config.server.emojis.totalhrs,
                             value: 'hours',
                         },
                         {
                             label: 'Leaderboard',
-                            emoji: '<:Owner:1333076354408906803>',
+                            emoji: client.config.server.emojis.leaderbord,
                             value: 'leaderboard',
                         },
                     ])
