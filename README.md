@@ -61,7 +61,13 @@ Now start the bot by opening a cmd line in that folder and typing: node index.js
 
 
 📸 Screenshots
-Soon
+![image](https://github.com/user-attachments/assets/69846cf3-e199-4bc8-9f4b-1cfeb744d911)
+![image](https://github.com/user-attachments/assets/869a6688-619c-4395-9653-1c81d5e55309)
+![image](https://github.com/user-attachments/assets/7c32dd1b-e72a-4cf0-b0da-7846e50bacac)
+![image](https://github.com/user-attachments/assets/9db1937e-626d-4ed8-9bec-05d09aa85810)
+![image](https://github.com/user-attachments/assets/f4ca8f93-ca0e-44f5-933a-3f4a3b9806e4)
+
+
 
 🤝 Contributing
 We welcome contributions!
