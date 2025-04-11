@@ -5,12 +5,20 @@ module.exports = {
         banner: "",
         id: "",
         color: "",
-        perms: ".",
+        perms: "",
         emojis: {
             "sin ena": "",
             "plein ena": "",
             online: "🟢",
             offline: "🔴",
+            totalhrs: "",
+            leaderbord: "",
+            support: "",
+            bug: "",
+            report: "",
+            other: "",
+            Criminalrl: "",
+            Civilianrl: ""
         },
         roles: {
             staff:     "",
@@ -105,14 +113,6 @@ module.exports = {
             Criminalct: "",
             Civilianct: ""
                },
-            emojis: {
-            support: "",
-            bug: "",
-            report: "",
-            other: "",
-            Criminalrl: "",
-            Civilianrl: ""
-           },
           roles: {
             support: "",
             bug: "",
