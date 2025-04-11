@@ -11,10 +11,10 @@ module.exports = {
             const embed = new MessageEmbed()
                 .setAuthor({ name: client.config.server.name, iconURL: client.config.server.image })
                 .setDescription('**```Παρακαλούμε να επιλέξετε το είδος του ticket που θέλετε να ανοίξετε, για την άμεση εξυπηρέτηση σας.```**')
-                .setFooter("Επιλέξτε από κάτω την κατηγορία για το Ticket.")
-                .setThumbnail(client.config.server.image)
-                .setColor(client.config.server.color);
 
+                .setThumbnail(client.config.server.image)
+                .setColor(client.config.server.color)
+                .setFooter({ text: "Επιλέξτε από κάτω την κατηγορία για το Ticket. | Made by m4r1os" });
             const menu = new MessageSelectMenu()
                 .setCustomId('ticket_menu')
                 .setPlaceholder('Select a Ticket Type')
@@ -22,32 +22,32 @@ module.exports = {
                     {
                         label: 'Support',
                         value: 'support',
-                        emoji: client.config.ticket.emojis.support
+                        emoji: client.config.server.emojis.support
                     },
                     {
                         label: 'Bug',
                         value: 'bug',
-                        emoji: client.config.ticket.emojis.bug
+                        emoji: client.config.server.emojis.bug
                     },
                     {
                         label: 'Report',
                         value: 'report',
-                        emoji: client.config.ticket.emojis.report
+                        emoji: client.config.server.emojis.report
                     },
                     {
                         label: 'Free Civilian Job',
                         value: 'civilian',
-                        emoji: client.config.ticket.emojis.civilianrl
+                        emoji: client.config.server.emojis.civilianrl
                     },
                     {
                         label: 'Free Criminal Job',
                         value: 'criminal',
-                        emoji: client.config.ticket.emojis.criminalrl
+                        emoji: client.config.server.emojis.criminalrl
                     },
                     {
                         label: 'Other',
                         value: 'other',
-                        emoji: client.config.ticket.emojis.other
+                        emoji: client.config.server.emojis.other
                     }
                 ]);
 
