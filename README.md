@@ -1,10 +1,6 @@
 # Discord-Roleplay-Bot
 
-A powerful and modular Discord bot built for **roleplay servers**, featuring full support tools, logging, dropdown tickets, staff activity, giveaways, and anti-raid protection.
-
----
-
-## ✨ Features
+# ✨ Features
 
 - 📜 **Logs System**
   - Join / Leave logs
