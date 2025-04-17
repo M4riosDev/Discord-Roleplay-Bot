@@ -13,7 +13,7 @@ client.on("guildMemberAdd", async (member) => {
     const quarantineRoleID = antialt.quarantineRole;
 
     try {
-        const accountAgeInDays = Math.floor((Date.now() - member.user.createdAt) / (1000 * 60 * 60 * 24));
+        const accountAgeInDays = Math.floor((Date.now() - member.user.createdAt) / (1000 * 60 * 60 * 24 * 3));
         const hasDefaultAvatar = !member.user.avatar;
         const isSuspiciousName = member.user.username.length < 3 ||
             member.user.username.length > 20 ||
