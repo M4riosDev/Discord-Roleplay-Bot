@@ -2,11 +2,12 @@ const client = require("../index");
 const { MessageEmbed } = require("discord.js");
 
 const config = client.config.antinuke;
-
 const recentActions = new Map();
 
-function isWhitelisted(userId) {
-    return config.whitelist.includes(userId);
+function isWhitelisted(userId, member) {
+    if (config.whitelist.includes(userId)) return true;
+    if (!member) return false;
+    return member.roles.cache.some(role => config.whitelistRoles?.includes(role.id));
 }
 
 function logIncident(guild, actionType, executor, details) {
@@ -21,7 +22,6 @@ function logIncident(guild, actionType, executor, details) {
             { name: "Details", value: details, inline: false }
         )
         .setColor("RED")
-        .setFooter({ text: 'Made by m4r1os' })
         .setTimestamp();
 
     channel.send({ embeds: [embed] });
@@ -39,7 +39,6 @@ async function punishUser(guild, executor, reason) {
     }
 }
 
-// Channel Create
 client.on("channelCreate", async (channel) => {
     if (!config.enabled) return;
 
@@ -48,13 +47,14 @@ client.on("channelCreate", async (channel) => {
     if (!entry) return;
 
     const executor = entry.executor;
-    if (isWhitelisted(executor.id)) return;
+    const member = await channel.guild.members.fetch(executor.id).catch(() => null);
+    if (isWhitelisted(executor.id, member)) return;
 
     const key = `${executor.id}_channelCreate`;
     const count = (recentActions.get(key) || 0) + 1;
     recentActions.set(key, count);
 
-    setTimeout(() => recentActions.delete(key), 10000); // 10s window
+    setTimeout(() => recentActions.delete(key), 10000);
 
     if (count > 3) {
         logIncident(channel.guild, "Mass Channel Creation", executor, `Created over 3 channels in 10 seconds.`);
@@ -62,7 +62,6 @@ client.on("channelCreate", async (channel) => {
     }
 });
 
-// Channel Delete
 client.on("channelDelete", async (channel) => {
     if (!config.enabled) return;
 
@@ -71,13 +70,14 @@ client.on("channelDelete", async (channel) => {
     if (!entry) return;
 
     const executor = entry.executor;
-    if (isWhitelisted(executor.id)) return;
+    const member = await channel.guild.members.fetch(executor.id).catch(() => null);
+    if (isWhitelisted(executor.id, member)) return;
 
     const key = `${executor.id}_channelDelete`;
     const count = (recentActions.get(key) || 0) + 1;
     recentActions.set(key, count);
 
-    setTimeout(() => recentActions.delete(key), 10000); // 10s window
+    setTimeout(() => recentActions.delete(key), 10000);
 
     if (count > 2) {
         logIncident(channel.guild, "Mass Channel Deletion", executor, `Deleted over 2 channels in 10 seconds.`);
