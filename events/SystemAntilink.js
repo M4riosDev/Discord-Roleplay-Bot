@@ -1,32 +1,54 @@
 const Discord = require("discord.js");
 const client = require("../index");
 
+const banCooldown = new Map();
+const BAN_COOLDOWN_MS = 10 * 60 * 1000; 
+
 client.on("messageCreate", async message => {
     if (!message.guild || !message.member || message.author.bot) return;
 
     const contentLower = message.content.toLowerCase();
 
-    const urlRegex = /(?:https?:\/\/)?(?:www\.)?[a-z0-9\-]+\.[a-z]{2,}(\/\S*)?/gi;
-
+    const urlRegex = /(?:https?:\/\/|www\.)[^\s]+|discord\.gg\/[^\s]+/gi;
     const containsLink = urlRegex.test(contentLower) ||
         contentLower.includes("discord.gg") ||
         contentLower.includes("discord.com/invite") ||
         message.embeds.length > 0;
 
-    const suspiciousKeywords = [
-        "look what", "not even 18", "onlyfans", "nude", "nudes", "+18",
-        "free steam", "steam gift", "steamcommunity.com", "steampowered.com",
-        "porn", "sexcam", "nsfw", "click here", "free giveaway", "free nitro", "50$",
-        "invite reward", "claim prize", "gift for you", "she's not even 18", "malware", "grabify"
+    const suspiciousPatterns = [
+        /look\s*what/i,
+        /not\s*even\s*18/i,
+        /only\s*fans?/i,
+        /n(u|0|4)d(e|3)?z?/i,
+        /n(\W|_|-|\\)*[0o]?[0o]dz?/i,
+        /s[e3]x|s[\W_]*x|s\$x/i,
+        /porn|p[o0]rn|pr[o0]n/i,
+        /nsfw/i,
+        /click\s*here/i,
+        /free|fr[e3][e3]|fr\W*e\W*e/i,
+        /steam\s*gift/i,
+        /steamcommunity\.com/i,
+        /steampowered\.com/i,
+        /\$?50/i,
+        /invite\s*reward/i,
+        /claim\s*prize/i,
+        /gift\s*for\s*you/i,
+        /she'?s\s*not\s*even\s*18/i,
+        /malware/i,
+        /gr[a@4]bify/i,
+        /would\s+(a|one)?\s*brother\s+.*(live|stay).*(older|younger).*(sister|one)/i
     ];
 
-    const isScam = suspiciousKeywords.some(p => contentLower.includes(p));
+    const triggeredPattern = suspiciousPatterns.find(pattern => pattern.test(contentLower));
+    const isScam = Boolean(triggeredPattern);
 
     const allowedRoles = client.config.antilink.allowedroles || [];
-    const whitelistedCategories = client.config.antilink.allowedcategories || [];
+    const allowedCategories = client.config.antilink.allowedcategories || [];
+    const allowedChannels = client.config.antilink.allowedchannels || [];
     const logsChannelID = client.config.antilink.channel;
 
-    if (message.channel.parentId && whitelistedCategories.includes(message.channel.parentId)) return;
+    if (message.channel.parentId && allowedCategories.includes(message.channel.parentId)) return;
+    if (allowedChannels.includes(message.channel.id)) return;
 
     const hasAllowedRole = message.member.roles.cache.some(role => allowedRoles.includes(role.id));
     if (message.member.permissions.has("ADMINISTRATOR") || hasAllowedRole) return;
@@ -40,28 +62,57 @@ client.on("messageCreate", async message => {
             { name: "**Username**", value: `\`${message.author.username}\``, inline: true },
             { name: "**User**", value: `<@${message.author.id}>`, inline: true },
             { name: "**Channel**", value: `<#${message.channel.id}>`, inline: true },
-            { name: "**Message**", value: message.content.length > 1024 ? message.content.slice(0, 1020) + "..." : message.content }
+            {
+                name: "**Message**",
+                value: message.content && message.content.trim().length > 0
+                    ? (message.content.length > 1024 ? message.content.slice(0, 1020) + "..." : message.content)
+                    : "*No message content (likely an embed or attachment)*"
+            }
         )
-        .setFooter({ text: 'Made by m4r1os' })
         .setTimestamp();
 
     if (containsLink) {
         await message.delete().catch(() => {});
 
         if (isScam) {
-            try {
-                await message.member.ban({ reason: "Scam link detected by Anti-Link system" });
+            const now = Date.now();
+            const lastBan = banCooldown.get(message.author.id);
 
-                baseEmbed
-                    .setTitle("🚨 User Banned - Scam Link Detected")
-                    .setColor("DARK_RED");
+            if (!lastBan || now - lastBan > BAN_COOLDOWN_MS) {
+                try {
+                    await message.member.ban({ reason: "Scam link detected by Anti-Link system" });
+                    banCooldown.set(message.author.id, now);
 
-            } catch (err) {
-                console.error("Failed to ban scammer:", err);
+                    baseEmbed
+                        .setTitle("🚨 User Banned - Scam Link Detected")
+                        .setColor("DARK_RED")
+                        .addField("🔍 Triggered Pattern", `\`\`\`${triggeredPattern}\`\`\``);
+
+ 
+                    setTimeout(() => {
+                        banCooldown.delete(message.author.id);
+                    }, BAN_COOLDOWN_MS);
+                } catch (err) {
+                    console.error("Failed to ban scammer:", err);
+                    baseEmbed
+                        .setTitle("⚠️ Scam Link Detected - Ban Failed")
+                        .setColor("RED")
+                        .addFields(
+                            { name: "🔍 Triggered Pattern", value: `\`\`\`${triggeredPattern}\`\`\`` },
+                            { name: "Error", value: `\`\`\`${err.message}\`\`\`` }
+                        );
+                }
+            } else {
                 baseEmbed
-                    .setTitle("⚠️ Scam Link Detected - Ban Failed")
-                    .setColor("RED")
-                    .addField("Error", `\`\`\`${err.message}\`\`\``);
+                    .setTitle("⚠️ Scam Link Detected - Ban Cooldown Active")
+                    .setColor("ORANGE")
+                    .addFields(
+                        { name: "🔍 Triggered Pattern", value: `\`\`\`${triggeredPattern}\`\`\`` },
+                        {
+                            name: "Cooldown",
+                            value: `<t:${Math.floor((lastBan + BAN_COOLDOWN_MS) / 1000)}:R> (ban cooldown)`
+                        }
+                    );
             }
         } else {
             baseEmbed
