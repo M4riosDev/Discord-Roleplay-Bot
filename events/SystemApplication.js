@@ -99,6 +99,13 @@ client.on("messageCreate", async (message) => {
     } else {
       activeApplications.delete(userId);
       const applicationChannel = client.channels.cache.get(client.config.application.transriptch);
+      const roleIdToPing = client.config.application.pingrl;
+
+      if (!applicationChannel) {
+        console.error("❌ Δεν βρέθηκε το κανάλι καταγραφής αιτήσεων (transriptch).");
+        return;
+      }
+
       const embed = new MessageEmbed()
         .setColor(client.config.server.color)
         .setTitle(`${message.author.tag} Υποβλήθηκε`)
@@ -111,7 +118,6 @@ client.on("messageCreate", async (message) => {
         .addField(client.config.application.quest5, answers[4] || "Δεν απαντήθηκε")
         .addField(client.config.application.quest6, answers[5] || "Δεν απαντήθηκε")
         .addField("Κατάσταση:", "❔ Σε εκκρεμότητα")
-        .setFooter({ text: 'Made by m4r1os' })
         .setTimestamp();
 
       const actionRow = new MessageActionRow().addComponents(
@@ -120,7 +126,12 @@ client.on("messageCreate", async (message) => {
       );
 
       try {
-        await applicationChannel.send({ embeds: [embed], components: [actionRow] });
+        await applicationChannel.send({
+          content: roleIdToPing ? `<@&${roleIdToPing}> Νέα αίτηση υποβλήθηκε!` : "📝 Νέα αίτηση υποβλήθηκε!",
+          embeds: [embed],
+          components: [actionRow]
+        });
+
         await message.author.send("✔️ Η αίτησή σας υποβλήθηκε με επιτυχία!");
         await db.set({ key: `submit_${userId}`, value: true });
       } catch (error) {
