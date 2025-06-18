@@ -133,7 +133,8 @@ module.exports = {
         quest4: "",
         quest5: "",
         quest6: "",
-        transriptch: ""   
+        transriptch: "",
+        pingrl: ""
 },  
     logs: {
         message: "",
