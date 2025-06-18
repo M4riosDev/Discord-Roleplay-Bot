@@ -2,7 +2,7 @@ const Discord = require("discord.js");
 const client = require("../index");
 
 const banCooldown = new Map();
-const BAN_COOLDOWN_MS = 10 * 60 * 1000; 
+const BAN_COOLDOWN_MS = 10 * 60 * 1000;
 
 client.on("messageCreate", async message => {
     if (!message.guild || !message.member || message.author.bot) return;
@@ -47,11 +47,19 @@ client.on("messageCreate", async message => {
     const allowedChannels = client.config.antilink.allowedchannels || [];
     const logsChannelID = client.config.antilink.channel;
 
+    const hasAllowedRole = message.member.roles.cache.some(role => allowedRoles.includes(role.id));
+    const isAdmin = message.member.permissions.has("ADMINISTRATOR");
+
     if (message.channel.parentId && allowedCategories.includes(message.channel.parentId)) return;
     if (allowedChannels.includes(message.channel.id)) return;
 
-    const hasAllowedRole = message.member.roles.cache.some(role => allowedRoles.includes(role.id));
-    if (message.member.permissions.has("ADMINISTRATOR") || hasAllowedRole) return;
+    const safeDomains = ["forms.gle", "youtube.com", "youtu.be", "tenor.com", "cdn.discordapp.com"];
+    const linkMatch = message.content.match(urlRegex);
+    const isSafeDomain = linkMatch
+        ? linkMatch.some(link => safeDomains.some(domain => link.includes(domain)))
+        : false;
+
+    if (containsLink && isSafeDomain && (hasAllowedRole || isAdmin) && !isScam) return;
 
     const logsChannel = message.guild.channels.cache.get(logsChannelID);
 
@@ -88,7 +96,6 @@ client.on("messageCreate", async message => {
                         .setColor("DARK_RED")
                         .addField("🔍 Triggered Pattern", `\`\`\`${triggeredPattern}\`\`\``);
 
- 
                     setTimeout(() => {
                         banCooldown.delete(message.author.id);
                     }, BAN_COOLDOWN_MS);
