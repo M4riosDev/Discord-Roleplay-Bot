@@ -126,14 +126,23 @@ client.on('interactionCreate', async interaction => {
         interaction.channel.awaitMessageComponent({ filter, time: 15000 })
             .then(async i => {
                 if (i.customId === 'confirm-clear') {
-                    await Activity.deleteMany({});
-                    i.update({ content: "✅ **Όλα τα δεδομένα δραστηριότητας διαγράφηκαν επιτυχώς!**", components: [] });
-                } else {
-                    i.update({ content: "❌ **Η ενέργεια ακυρώθηκε.**", components: [] });
-                }
-            })
-            .catch(() => interaction.editReply({ content: "⏳ **Δεν δόθηκε απάντηση, η ενέργεια ακυρώθηκε.**", components: [] }));
-    }
+    await Activity.deleteMany({});
+    
+    i.update({ content: "✅ **Όλα τα δεδομένα δραστηριότητας διαγράφηκαν επιτυχώς!**", components: [] });
+
+    const logEmbed = new Discord.MessageEmbed()
+        .setColor('DARK_RED')
+        .setTitle('Διαγραφή Βάσης Δεδομένων')
+        .setDescription(`**Όλα τα δεδομένα δραστηριότητας διαγράφηκαν** από τον χρήστη <@${interaction.user.id}>.`)
+        .addField('Χρήστης', `${interaction.user.tag} (${interaction.user.id})`, true)
+        .addField('Ημερομηνία', `${moment().tz('Europe/Athens').format('DD/MM/YYYY HH:mm:ss')}`, true)
+        .setTimestamp();
+
+    duty.send({ embeds: [logEmbed] });
+
+} else {
+    i.update({ content: "❌ **Η ενέργεια ακυρώθηκε.**", components: [] });
+}
 
     const { MessageEmbed } = require('discord.js');
 
